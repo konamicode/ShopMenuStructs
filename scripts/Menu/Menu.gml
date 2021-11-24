@@ -9,11 +9,7 @@ function MenuItem(_title, _cost, _image) constructor {
 	x = other.x;
 	y = other.y;
 	buttonDec = instance_create_layer(x, y, "Instances", objButton);
-	buttonDec.myStruct = self;
-	buttonDec.callback = RemoveFromCart;
 	buttonInc = instance_create_layer(x, y, "Instances", objButton);
-	buttonInc.myStruct = self;
-	buttonInc.callback = AddToCart;
 	buttonDec.facing = -1;
 	
 	static AddToCart = function()
@@ -43,10 +39,17 @@ function ShopMenu() constructor {
 	x = other.x;
 	y = other.y;
 	subTotal = 0;
+	currentIndex = 0;
+	var menu = self;
 	
 	static AddItem = function(title, cost, image) {
 		item = new MenuItem(title, cost, image);
 		shopList[array_length(shopList)] = item;
+		var _index = array_length(shopList);
+		item.buttonDec.callback = Remove;
+		item.buttonDec.shopIndex = _index - 1;
+		item.buttonInc.callback = Add;
+		item.buttonInc.shopIndex = _index - 1;
 	}
 	
 	function updateSubTotal()
@@ -54,9 +57,35 @@ function ShopMenu() constructor {
 		subTotal = 0;
 		for ( var i = 0; i < array_length(shopList); i++)
 		{
-			var currentItem = shopList[i];
-			subTotal += currentItem.quantityToBuy * currentItem.cost;
+			var currentIndex = shopList[i];
+			subTotal += currentIndex.quantityToBuy * currentIndex.cost;
 		}
+	}
+	
+	static MenuDown = function() {
+		if ((currentIndex + 1) < array_length(shopList))
+			currentIndex += 1;
+		else
+			currentIndex = 0;
+			
+	}
+	
+	static MenuUp = function() {
+		if (currentIndex == 0)
+			currentIndex = array_length(shopList);
+		else
+			currentIndex -= 1;
+	
+	}
+	
+	static Add = function(_index) {
+		var item = shopList[_index];
+		item.AddToCart();
+	}
+	
+	static Remove = function(_index) {
+		var item = shopList[_index];
+		item.RemoveFromCart();
 	}
 	
 	static DrawShopMenu = function() 
@@ -65,23 +94,38 @@ function ShopMenu() constructor {
 		{
 
 			var v_spacer = 48;
-			var currentItem = shopList[i];
+			var _item = shopList[i];
 			var y_pos = y + (i * v_spacer);
-			currentItem.DrawItem(x, y + (i * v_spacer));
+			_item.DrawItem(x, y + (i * v_spacer));
 			draw_set_valign(fa_center);
-			draw_text(x + 40, y_pos, currentItem.title);
-			
-			currentItem.buttonDec.x = x + 170;
-			currentItem.buttonDec.y = y_pos;
-			draw_text(x + 200, y_pos, currentItem.quantityToBuy);
-			currentItem.buttonInc.x = x + 240;
-			currentItem.buttonInc.y = y_pos;
+			var c = draw_get_color();
+			if (i == currentIndex)
+				draw_set_color(c_white)
+			else
+				draw_set_color(c_black)
+			draw_text(x + 40, y_pos, _item.title);
+			draw_set_color(c);
+			_item.buttonDec.x = x + 170;
+			_item.buttonDec.y = y_pos;
+
+			draw_text(x + 200, y_pos, _item.quantityToBuy);
+			_item.buttonInc.x = x + 240;
+			_item.buttonInc.y = y_pos;
 		}
 		
 		draw_text(room_width/2, v_spacer * (i + 1), "Subtotal: " + string(subTotal));
 	}
+	
+	static Purchase = function()
+	{
+		//deduct cost and add to ship inventory
+	}
+	
+	function GetCallback(_func, _param) {
+		_func(_param);	
+	}
 }
 
 function DoNothing() {
-	
+	return 0;
 }

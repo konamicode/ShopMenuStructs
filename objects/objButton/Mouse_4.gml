@@ -2,4 +2,6 @@
 // You can write your code in this editor
 
 isClicked = true;
-myStruct.GetCallback(callback);
+var btn = id;
+
+objShopMenu.shopMenu.GetCallback(btn.callback,btn.shopIndex);
