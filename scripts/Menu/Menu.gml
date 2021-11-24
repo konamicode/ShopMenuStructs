@@ -41,7 +41,9 @@ function ShopMenu() constructor {
 	subTotal = 0;
 	currentIndex = 0;
 	var menu = self;
-	
+	btnPurchase = instance_create_layer(x, y, "Instances", objButton);
+	btnPurchase.sprite_index = sprButtonPurchase;
+	btnPurchase.callback = Purchase;
 	static AddItem = function(title, cost, image) {
 		item = new MenuItem(title, cost, image);
 		shopList[array_length(shopList)] = item;
@@ -114,11 +116,15 @@ function ShopMenu() constructor {
 		}
 		
 		draw_text(room_width/2, v_spacer * (i + 1), "Subtotal: " + string(subTotal));
+		btnPurchase.x = room_width/2;
+		btnPurchase.y = v_spacer * (i + 3);
+		draw_text(room_width/2, v_spacer * (i + 3), "Purchase");
 	}
 	
 	static Purchase = function()
 	{
 		//deduct cost and add to ship inventory
+		show_debug_message("I bought a thing for : " + string(subTotal) + "!");
 	}
 	
 	function GetCallback(_func, _param) {

@@ -2,6 +2,7 @@
   "resources": [
     {"id":{"name":"sprButton","path":"sprites/sprButton/sprButton.yy",},"order":1,},
     {"id":{"name":"objShopMenu","path":"objects/objShopMenu/objShopMenu.yy",},"order":0,},
+    {"id":{"name":"sprButtonPurchase","path":"sprites/sprButtonPurchase/sprButtonPurchase.yy",},"order":2,},
     {"id":{"name":"objButton","path":"objects/objButton/objButton.yy",},"order":1,},
     {"id":{"name":"Menu","path":"scripts/Menu/Menu.yy",},"order":0,},
     {"id":{"name":"spr_shopCanBall","path":"sprites/spr_shopCanBall/spr_shopCanBall.yy",},"order":0,},
